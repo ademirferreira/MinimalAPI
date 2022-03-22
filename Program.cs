@@ -85,4 +85,23 @@ app.MapPut("/fornecedor/{id}", async (
     .WithName("PutFornecedor")
     .WithTags("Fornecedor");
 
+app.MapDelete("/fornecedor/{id}", async (
+        Guid id,
+        MinimalContextDb context) =>
+    {
+        var fornecedor = await context.Fornecedores.FindAsync(id);
+        if (fornecedor == null) return Results.BadRequest();
+        context.Fornecedores.Remove(fornecedor);
+        var result = await context.SaveChangesAsync();
+
+        return result > 0
+            ? Results.NoContent()
+            : Results.BadRequest("Houve um problema ao excluir o registro");
+    }
+)
+    .Produces(StatusCodes.Status404NotFound)
+    .Produces(StatusCodes.Status204NoContent)
+    .WithName("ExcluirFornecedor")
+    .WithTags("Fornecedor");
+
 app.Run();
