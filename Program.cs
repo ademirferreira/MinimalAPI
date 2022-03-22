@@ -20,4 +20,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapGet("/fornecedor", async (
+    MinimalContextDb context) =>
+    await context.Fornecedores.ToListAsync())
+    .WithName("GetFornecedor")
+    .WithTags("Fornecedor");
+
 app.Run();
